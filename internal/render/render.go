@@ -3,8 +3,9 @@ package render
 import (
 	"bytes"
 	"errors"
-	"github.com/viktar3w/web-example/pkg/config"
-	"github.com/viktar3w/web-example/pkg/models"
+	"github.com/justinas/nosurf"
+	"github.com/viktar3w/web-example/internal/config"
+	"github.com/viktar3w/web-example/internal/models"
 	"html/template"
 	"net/http"
 	"path/filepath"
@@ -24,13 +25,14 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
-func AddDefaultData(td *models.TemplateData) *models.TemplateData {
-
+// AddDefaultData ...
+func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
+	td.CSRFToken = nosurf.Token(r)
 	return td
 }
 
 // RenderTemplate ...
-func RenderTemplate(w http.ResponseWriter, templatePath string, td *models.TemplateData) error {
+func RenderTemplate(w http.ResponseWriter, r *http.Request, templatePath string, td *models.TemplateData) error {
 	var templates map[string]*template.Template
 	var err error
 	if app.UseCache {
@@ -46,7 +48,7 @@ func RenderTemplate(w http.ResponseWriter, templatePath string, td *models.Templ
 		return errors.New("Template isn't - " + templatePath)
 	}
 	buf := new(bytes.Buffer)
-	td = AddDefaultData(td)
+	td = AddDefaultData(td, r)
 	if err = parsedTemplate.Execute(buf, td); err != nil {
 		return err
 	}

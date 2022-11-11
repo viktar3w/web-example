@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"github.com/alexedwards/scs/v2"
-	"github.com/viktar3w/web-example/pkg/config"
-	"github.com/viktar3w/web-example/pkg/handlers"
-	"github.com/viktar3w/web-example/pkg/render"
+	"github.com/viktar3w/web-example/internal/config"
+	"github.com/viktar3w/web-example/internal/handlers"
+	"github.com/viktar3w/web-example/internal/render"
 	"log"
 	"net/http"
 	"time"
